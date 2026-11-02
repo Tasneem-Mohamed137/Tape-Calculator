@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tape Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;600&family=Bricolage+Grotesque:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="desk">
+
+    <section class="calc" aria-label="Calculator">
+      <div class="screen" role="status" aria-live="polite">
+        <div class="screen__expr" id="expr"></div>
+        <div class="screen__value" id="value">0</div>
+      </div>
+
+      <div class="keys" id="keys">
+        <button class="key key--clear"  data-action="clear">AC</button>
+        <button class="key key--fn"     data-action="negate" aria-label="Change sign">±</button>
+        <button class="key key--fn"     data-action="percent" aria-label="Percent">%</button>
+        <button class="key key--op"     data-op="÷" aria-label="Divide">÷</button>
+
+        <button class="key" data-num="7">7</button>
+        <button class="key" data-num="8">8</button>
+        <button class="key" data-num="9">9</button>
+        <button class="key key--op" data-op="×" aria-label="Multiply">×</button>
+
+        <button class="key" data-num="4">4</button>
+        <button class="key" data-num="5">5</button>
+        <button class="key" data-num="6">6</button>
+        <button class="key key--op" data-op="−" aria-label="Subtract">−</button>
+
+        <button class="key" data-num="1">1</button>
+        <button class="key" data-num="2">2</button>
+        <button class="key" data-num="3">3</button>
+        <button class="key key--op" data-op="+" aria-label="Add">+</button>
+
+        <button class="key" data-action="delete" aria-label="Backspace">⌫</button>
+        <button class="key" data-num="0">0</button>
+        <button class="key" data-action="dot" aria-label="Decimal point">.</button>
+        <button class="key key--equals" data-action="equals" aria-label="Equals">=</button>
+      </div>
+    </section>
+
+    <aside class="tape" aria-label="Calculation history">
+      <div class="tape__head">
+        <h1>Paper tape</h1>
+        <button class="tape__tear" id="tear" type="button">Tear off</button>
+      </div>
+      <ol class="tape__list" id="tape">
+        <li class="tape__empty">Finished sums print here.</li>
+      </ol>
+    </aside>
+
+  </main>
+</body>
+</html>

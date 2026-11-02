@@ -1,0 +1,201 @@
+/* ---------- Tokens ---------- */
+:root {
+  --desk:      #26343b;   /* slate-teal desk */
+  --body:      #3b4f58;   /* calculator casing */
+  --body-edge: #1b262c;
+  --lcd:       #cfd9a8;   /* pale green LCD */
+  --lcd-ink:   #202a14;
+  --key:       #efe9da;   /* bone keys */
+  --key-edge:  #b9b19c;
+  --key-ink:   #2a2f33;
+  --op:        #f0b73c;   /* brass operators */
+  --op-edge:   #b3801a;
+  --clear:     #d9524a;
+  --clear-edge:#8f2c27;
+  --equals:    #2fa59b;
+  --equals-edge:#17625b;
+  --paper:     #fbf8ef;
+  --paper-ink: #3a3a36;
+
+  --mono: "Chivo Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --head: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --press: 6px; /* how deep a key sits */
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  background:
+    radial-gradient(circle at 20% 10%, #31434c 0%, transparent 55%),
+    var(--desk);
+  color: var(--paper);
+  font-family: var(--mono);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+/* ---------- Layout ---------- */
+.desk {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) minmax(220px, 280px);
+  gap: 2rem;
+  align-items: start;
+  width: 100%;
+  max-width: 700px;
+  justify-content: center;
+}
+
+/* ---------- Calculator body ---------- */
+.calc {
+  background: var(--body);
+  border-radius: 28px;
+  padding: 1.25rem;
+  box-shadow:
+    0 2px 0 #52707d inset,
+    0 -6px 0 var(--body-edge) inset,
+    0 30px 50px -20px rgba(0, 0, 0, .6);
+}
+
+.screen {
+  background: var(--lcd);
+  color: var(--lcd-ink);
+  border-radius: 14px;
+  padding: .75rem 1rem 1rem;
+  margin-bottom: 1.25rem;
+  min-height: 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: right;
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, .35);
+  overflow: hidden;
+}
+.screen__expr  { min-height: 1.4em; font-size: .95rem; opacity: .65; }
+.screen__value {
+  font-size: clamp(2rem, 9vw, 3rem);
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.screen.is-error .screen__value { font-size: 1.6rem; }
+
+/* ---------- Keys ---------- */
+.keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .8rem;
+}
+
+.key {
+  font: 600 1.35rem var(--mono);
+  color: var(--key-ink);
+  background: var(--key);
+  border: 0;
+  border-radius: 14px;
+  height: 3.6rem;
+  cursor: pointer;
+  box-shadow: 0 var(--press) 0 var(--key-edge), 0 calc(var(--press) + 4px) 8px rgba(0, 0, 0, .35);
+  transition: transform .06s ease, box-shadow .06s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.key:hover  { filter: brightness(1.04); }
+.key:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
+
+/* the pressed state — used for mouse, touch and keyboard (JS adds .is-down) */
+.key:active, .key.is-down {
+  transform: translateY(var(--press));
+  box-shadow: 0 0 0 var(--key-edge), 0 2px 4px rgba(0, 0, 0, .35);
+}
+
+.key--fn     { background: #d9d3c1; }
+.key--op     { background: var(--op);     color: #3a2a05; box-shadow: 0 var(--press) 0 var(--op-edge),     0 calc(var(--press) + 4px) 8px rgba(0,0,0,.35); }
+.key--clear  { background: var(--clear);  color: #fff;    box-shadow: 0 var(--press) 0 var(--clear-edge),  0 calc(var(--press) + 4px) 8px rgba(0,0,0,.35); }
+.key--equals { background: var(--equals); color: #fff;    box-shadow: 0 var(--press) 0 var(--equals-edge), 0 calc(var(--press) + 4px) 8px rgba(0,0,0,.35); }
+
+/* the active operator stays lit until the second number is typed */
+.key--op.is-armed {
+  background: #fff3c9;
+  outline: 3px solid var(--op);
+}
+
+.key--op:active, .key--op.is-down,
+.key--clear:active, .key--clear.is-down,
+.key--equals:active, .key--equals.is-down { box-shadow: 0 0 0 transparent, 0 2px 4px rgba(0, 0, 0, .35); }
+
+/* ---------- Paper tape ---------- */
+.tape {
+  background: var(--paper);
+  color: var(--paper-ink);
+  padding: 1rem 1rem 1.6rem;
+  max-height: 520px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px -18px rgba(0, 0, 0, .6);
+  /* torn zig-zag bottom edge */
+  --zig: 10px;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--zig) * 2) 100% repeat-x;
+          mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--zig) * 2) 100% repeat-x;
+}
+
+.tape__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 2px dashed #cfc8b4;
+  padding-bottom: .6rem;
+  margin-bottom: .6rem;
+}
+.tape__head h1 { font: 800 1.1rem var(--head); margin: 0; letter-spacing: .01em; }
+
+.tape__tear {
+  font: 400 .8rem var(--mono);
+  background: none;
+  border: 1px solid #b9b19c;
+  border-radius: 6px;
+  padding: .2rem .5rem;
+  color: inherit;
+  cursor: pointer;
+}
+.tape__tear:hover { background: #efe9da; }
+
+.tape__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;   /* newest prints at the top */
+}
+.tape__list li {
+  padding: .45rem 0;
+  border-bottom: 1px dotted #d8d1bd;
+  text-align: right;
+  font-size: .85rem;
+  cursor: pointer;                  /* click a line to reuse its answer */
+}
+.tape__list li b { display: block; font-size: 1.05rem; font-weight: 600; }
+.tape__list li:hover b { text-decoration: underline; }
+.tape__list li.tape__empty { color: #8b8777; cursor: default; text-align: left; border: 0; }
+.tape__list li.tape__empty:hover b { text-decoration: none; }
+
+/* new line "prints" in — only motion that is not triggered directly by a key */
+.tape__list li.is-new { animation: print .35s ease-out; }
+@keyframes print {
+  from { transform: translateY(-14px); opacity: 0; }
+  to   { transform: none;              opacity: 1; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+  .desk { grid-template-columns: minmax(0, 360px); }
+  .tape { max-height: 220px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .key, .tape__list li.is-new { transition: none; animation: none; }
+}
